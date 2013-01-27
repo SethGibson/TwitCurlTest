@@ -2,6 +2,7 @@
 #include "cinder/Rand.h"
 #include "cinder/app/AppBasic.h"
 #include "cinder/gl/gl.h"
+#include "cinder/Rand.h"
 #include "cinder/Utilities.h"
 #include "cinder/gl/TextureFont.h"
 #include "json/json.h"
@@ -15,14 +16,13 @@ class TwitCurlTestApp : public AppBasic {
   public:
 	void prepareSettings( Settings* settings );
 	void setup();
-	void mouseDown( MouseEvent event );	
 	void update();
 	void draw();
 
-	std::vector<std::string> temp;
-	std::vector<std::string> words;
-	cinder::gl::TextureFont::DrawOptions fontOpts;
-	cinder::gl::TextureFontRef font;
+	vector<string> temp;
+	vector<string> words;
+	gl::TextureFont::DrawOptions fontOpts;
+	gl::TextureFontRef font;
 	twitCurl twit;
 
 };
@@ -34,26 +34,26 @@ void TwitCurlTestApp::prepareSettings( Settings* settings )
 
 void TwitCurlTestApp::setup()
 {
-	cinder::gl::clear(Color(0,0,0));
-	cinder::gl::enableAlphaBlending(false);
-	font = cinder::gl::TextureFont::create( cinder::Font( loadFile("acmesa.TTF"),16));
-	std::string resp;
+	gl::clear(Color(0,0,0));
+	gl::enableAlphaBlending(false);
+	font = gl::TextureFont::create( Font( loadFile("acmesa.TTF"),16));
+	string resp;
 	
-	twit.setProxyServerIp(std::string("ip.ip.ip.ip"));
-	twit.setProxyServerPort(std::string("port"));
+	twit.setProxyServerIp(string("ip.ip.ip.ip"));
+	twit.setProxyServerPort(string("port"));
 
 	//setup oauth
-	twit.getOAuth().setConsumerKey(std::string("Consumer Key"));
-	twit.getOAuth().setConsumerSecret(std::string("Consumer Secret"));
-	twit.getOAuth().setOAuthTokenKey(std::string("Access Key"));
-	twit.getOAuth().setOAuthTokenSecret(std::string("Access Secret"));
+	twit.getOAuth().setConsumerKey(string("Consumer Key"));
+	twit.getOAuth().setConsumerSecret(string("Consumer Secret"));
+	twit.getOAuth().setOAuthTokenKey(string("Access Key"));
+	twit.getOAuth().setOAuthTokenSecret(string("Access Secret"));
 	twit.setTwitterApiType( twitCurlTypes::eTwitCurlApiFormatJson );
 	
 	if(twit.accountVerifyCredGet() )
 	{
 		twit.getLastWebResponse( resp );
-		cinder::app::console() << resp << std::endl;
-		if(twit.search(std::string("perceptualcomputing")))
+		console() << resp << std::endl;
+		if(twit.search(string("perceptualcomputing")))
 		{
 			twit.getLastWebResponse( resp );
 			Json::Value root;
@@ -62,7 +62,7 @@ void TwitCurlTestApp::setup()
 			bool parsed = json.parse(resp, root, false);
 			if(!parsed)
 			{
-				cinder::app::console() << json.getFormattedErrorMessages() << std::endl;
+				console() << json.getFormattedErrorMessages() << std::endl;
 			}
 			else
 			{
@@ -70,8 +70,8 @@ void TwitCurlTestApp::setup()
 				for(int i=0;i<results.size();++i)
 				{
 					temp.clear();
-					const std::string content = results[i]["text"].asString();
-					temp = cinder::split(content, ' ');
+					const string content = results[i]["text"].asString();
+					temp = split(content, ' ');
 					words.insert(words.end(),temp.begin(),temp.end());
 				}
 			}
@@ -80,12 +80,8 @@ void TwitCurlTestApp::setup()
 	else
 	{
 		twit.getLastCurlError( resp );
-		cinder::app::console() << resp << std::endl;
+		console() << resp << std::endl;
 	}
-}
-
-void TwitCurlTestApp::mouseDown( MouseEvent event )
-{
 }
 
 void TwitCurlTestApp::update()
@@ -95,23 +91,20 @@ void TwitCurlTestApp::update()
 void TwitCurlTestApp::draw()
 {
 
-	cinder::gl::color(0,0,0,0.015f);
-	cinder::gl::drawSolidRect(cinder::Rectf(0,0,1280,720));
+	gl::color(0,0,0,0.015f);
+	gl::drawSolidRect(cinder::Rectf(0,0,getWindowWidth(),getWindowHeight()));
 
-	cinder::gl::color(1,1,1,cinder::Rand::randFloat(0.25f,0.75f));
-	int numFrames = cinder::app::getElapsedFrames();
+	gl::color(1,1,1,Rand::randFloat(0.25f,0.75f));
+	int numFrames = getElapsedFrames();
 	if(numFrames%15==0)
 	{
 		if(words.size()>0)
 		{
 			int i = numFrames%words.size();
-			fontOpts.scale(cinder::Rand::randFloat(0.3,3.0f));
-			std::string word = words[i];
+			fontOpts.scale(Rand::randFloat(0.3,3.0f));
+			string word = words[i];
 
-			font->drawString(word,
-							cinder::Vec2f(cinder::Rand::randFloat(cinder::app::getWindowWidth()),
-							cinder::Rand::randFloat(cinder::app::getWindowHeight())),
-							fontOpts );
+			font->drawString(word, Vec2f(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight())), fontOpts);
 		}
 	}
 }

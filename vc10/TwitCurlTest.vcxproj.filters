@@ -23,10 +23,10 @@
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\CPP\lib\build\libtwitcurl\include\oauthlib.h">
+    <ClInclude Include="..\include\oauthlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\CPP\lib\build\libtwitcurl\include\twitcurl.h">
+    <ClInclude Include="..\include\twitcurl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
