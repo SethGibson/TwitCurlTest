@@ -94,17 +94,16 @@ void TwitCurlTestApp::draw()
 	gl::color(0,0,0,0.015f);
 	gl::drawSolidRect(cinder::Rectf(0,0,getWindowWidth(),getWindowHeight()));
 
-	gl::color(1,1,1,Rand::randFloat(0.25f,0.75f));
 	int numFrames = getElapsedFrames();
 	if(numFrames%15==0)
 	{
 		if(words.size()>0)
 		{
 			int i = numFrames%words.size();
-			fontOpts.scale(Rand::randFloat(0.3,3.0f));
-			string word = words[i];
 
-			font->drawString(word, Vec2f(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight())), fontOpts);
+			gl::color(1,1,1,Rand::randFloat(0.25f,0.75f));
+			fontOpts.scale(Rand::randFloat(0.3,3.0f));
+			font->drawString(words[i], Vec2f(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight())), fontOpts);
 		}
 	}
 }
